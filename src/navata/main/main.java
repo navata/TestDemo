@@ -15,10 +15,10 @@ public class main {
 
 	public static void main(String[] args) {
 		main main = new main();
-		// main.defineNumberHashMap();
-		// main.phantich();
+		 main.defineNumberHashMap();
+		 main.phantich();
 		main.defineNumberHashMap2();
-		main.run("0");
+		main.run("1");
 	}
 
 	public int getIndex(List<String> valid, int number, String style) {
