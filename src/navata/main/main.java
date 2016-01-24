@@ -1,5 +1,12 @@
 package navata.main;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,17 +17,68 @@ public class main {
 	HashMap<Integer, String> NUMBER_HASHMAP = new HashMap<>();
 	HashMap<String, String> NUMBER_HASHMAP2 = new HashMap<>();
 
-	List<String> valid = new ArrayList<String>();
-	List<String> mis = new ArrayList<String>();
+	
 
 	public static void main(String[] args) {
 		main main = new main();
-		 main.defineNumberHashMap();
-		 main.phantich();
+//		 main.defineNumberHashMap();
+//		 main.phantich();
 		main.defineNumberHashMap2();
-		main.run("1");
+//		main.run("1");
+//		main.readFile();
+		main.writeFile(main.readFile());
 	}
 
+	public void writeFile(String content){
+		File file = new File("/Navata/text/output.txt");
+//		String content = "This is the text content";
+
+		try (FileOutputStream fop = new FileOutputStream(file)) {
+
+			// if file doesn't exists, then create it
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+
+			// get the content in bytes
+			byte[] contentInBytes = content.getBytes();
+
+			fop.write(contentInBytes);
+			fop.flush();
+			fop.close();
+
+			System.out.println("Done");
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public String readFile(){
+		String path = "/Navata/text/test.txt";
+		File file = new File(path);
+		StringBuilder output = new StringBuilder() ;
+		try {
+			FileInputStream inputFile = new FileInputStream(file);
+			BufferedReader buffer = new BufferedReader(new InputStreamReader(inputFile));
+			String line;
+			while ((line = buffer.readLine()) != null){
+				line = line.trim();
+				if(line != null && !line.isEmpty()){
+//					System.out.println(line);
+				 output.append(run(line, "0") + "\n");
+				}
+//				System.out.println(line);
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return output.toString();
+		
+	}
+	
 	public int getIndex(List<String> valid, int number, String style) {
 		int index = 0;
 
@@ -43,19 +101,27 @@ public class main {
 		return index;
 	}
 
-	public void run(String type) {
-		String input = "10, -9, eight, 8, eighteen ,11 ,100, thirty one";
+	public String run(String input,String type) {
+		List<String> valid = new ArrayList<String>();
+		List<String> mis = new ArrayList<String>();
+//		String input = "10, -9, eight, 8, eighteen ,11 ,100, thirty one";
 		for (String element : input.split(",")) {
 			String number = stringToNumber(element);
 			if (number != null) {
 				valid.add(getIndex(valid, Integer.parseInt(number),type), element);
 				// valid.add(element);
 			} else {
-				mis.add(element);
+				mis.add("Invalid:" + element);
 			}
 		}
-		System.out.println(valid);
-		System.out.println(mis);
+//		if(mis != null)
+		valid.addAll(mis);
+		System.out.println(valid.toString());
+//		System.out.println(mis);
+		
+//		valid.clear();
+//		mis.clear();
+		return valid.toString();
 	}
 
 	public static boolean isNumberic(String str) {
