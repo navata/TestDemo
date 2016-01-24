@@ -11,27 +11,44 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 
-public class main {
+public class Main {
 
 	HashMap<Integer, String> NUMBER_HASHMAP = new HashMap<>();
 	HashMap<String, String> NUMBER_HASHMAP2 = new HashMap<>();
 
-	
-
 	public static void main(String[] args) {
-		main main = new main();
-//		 main.defineNumberHashMap();
-//		 main.phantich();
+		Main main = new Main();
+		// main.defineNumberHashMap();
+		// main.phantich();
 		main.defineNumberHashMap2();
-//		main.run("1");
-//		main.readFile();
-		main.writeFile(main.readFile());
+		// main.run("1");
+		// main.readFile();
+//		main.writeFile(main.readFile());
+		main.input();
 	}
 
-	public void writeFile(String content){
+	public void input(){
+		Scanner scan = new Scanner(System.in);
+		String path;
+		String type;
+		System.out.print("Please input path file: ");
+		path = scan.nextLine();
+		if(path != null && !path.isEmpty()){
+			System.out.println("---- Type sort ---- ");
+			System.out.println("0: descending order");
+			System.out.println("1: ascending order");
+			System.out.print("Please choose: ");
+			type = scan.nextLine();
+			writeFile(readFile(path, type));
+		}
+		
+		
+	}
+	
+	public void writeFile(String content) {
 		File file = new File("/Navata/text/output.txt");
-//		String content = "This is the text content";
 
 		try (FileOutputStream fop = new FileOutputStream(file)) {
 
@@ -53,44 +70,43 @@ public class main {
 			e.printStackTrace();
 		}
 	}
-	
-	public String readFile(){
-		String path = "/Navata/text/test.txt";
+
+	public String readFile(String path, String type) {
+//		String path = "/Navata/text/test.txt";
 		File file = new File(path);
-		StringBuilder output = new StringBuilder() ;
+		StringBuilder output = new StringBuilder();
+		
 		try {
 			FileInputStream inputFile = new FileInputStream(file);
 			BufferedReader buffer = new BufferedReader(new InputStreamReader(inputFile));
 			String line;
-			while ((line = buffer.readLine()) != null){
+			while ((line = buffer.readLine()) != null) {
 				line = line.trim();
-				if(line != null && !line.isEmpty()){
-//					System.out.println(line);
-				 output.append(run(line, "0") + "\n");
+				if (line != null && !line.isEmpty()) {
+					String sortNumber = sortNumber(line, type);
+					output.append(sortNumber + "\n");
 				}
-//				System.out.println(line);
 			}
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return output.toString();
-		
+
 	}
-	
-	public int getIndex(List<String> valid, int number, String style) {
+
+	public int getIndex(List<String> valid, int number, String type) {
 		int index = 0;
 
 		for (int i = valid.size() - 1; i >= 0; i--) {
-
 			int value = Integer.parseInt(stringToNumber(valid.get(i)));
-			if (style.equals("0")) {
+			if (type.equals("0")) {
 				if (number <= value) {
 					index = i + 1;
 					break;
 				}
-			}else{
+			} else {
 				if (number >= value) {
 					index = i + 1;
 					break;
@@ -101,26 +117,24 @@ public class main {
 		return index;
 	}
 
-	public String run(String input,String type) {
+	public String sortNumber(String input, String type) {
 		List<String> valid = new ArrayList<String>();
 		List<String> mis = new ArrayList<String>();
-//		String input = "10, -9, eight, 8, eighteen ,11 ,100, thirty one";
+
 		for (String element : input.split(",")) {
 			String number = stringToNumber(element);
 			if (number != null) {
-				valid.add(getIndex(valid, Integer.parseInt(number),type), element);
-				// valid.add(element);
+				int index = getIndex(valid, Integer.parseInt(number), type);
+				valid.add(index, element);
 			} else {
 				mis.add("Invalid:" + element);
 			}
+		
 		}
-//		if(mis != null)
+		
 		valid.addAll(mis);
 		System.out.println(valid.toString());
-//		System.out.println(mis);
 		
-//		valid.clear();
-//		mis.clear();
 		return valid.toString();
 	}
 
@@ -135,30 +149,30 @@ public class main {
 	}
 
 	private String stringToNumber(String input) {
-		// String input = "13";
 		input = (formatString(input));
 		int sum = 0;
-		String[] arr = input.split(" ");
+		String[] number = input.split(" ");
 		String dau = "+";
 
 		if (isNumberic(input)) {
+
 			return input;
+
 		} else {
 
 			int i = 0;
 
-			if (arr[0].equals("negative")) {
+			if (number[0].equals("negative")) {
 				dau = "-";
 				i++;
-			} else if (arr[0].equals("positive")) {
+			} else if (number[0].equals("positive")) {
 				i++;
 			}
 
-			for (; i < arr.length; i++) {
-				String value = NUMBER_HASHMAP2.get(arr[i]);
+			for (; i < number.length; i++) {
+				String value = NUMBER_HASHMAP2.get(number[i]);
 				if (value != null) {
 					sum += Integer.parseInt(dau + value);
-
 				} else {
 					return null;
 				}
