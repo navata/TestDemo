@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,40 +16,40 @@ import java.util.Scanner;
 
 public class Main {
 
-	HashMap<Integer, String> NUMBER_HASHMAP = new HashMap<>();
-	HashMap<String, String> NUMBER_HASHMAP2 = new HashMap<>();
+	HashMap<String, String> NUMBER_HASHMAP = new HashMap<>();
 
 	public static void main(String[] args) {
 		Main main = new Main();
-		// main.defineNumberHashMap();
-		// main.phantich();
-		main.defineNumberHashMap2();
-		// main.run("1");
-		// main.readFile();
-//		main.writeFile(main.readFile());
-		main.input();
+		main.sortNumber();
 	}
 
-	public void input(){
+	public void sortNumber() {
+		defineNumberHashMap();
 		Scanner scan = new Scanner(System.in);
 		String path;
 		String type;
-		System.out.print("Please input path file: ");
-		path = scan.nextLine();
-		if(path != null && !path.isEmpty()){
+		File file;
+		do {
+			System.out.print("Please input path file: ");
+			path = scan.nextLine();
+			file = new File(path);
+		} while (!file.isFile());
+
+		if (path != null && !path.isEmpty()) {
 			System.out.println("---- Type sort ---- ");
 			System.out.println("0: descending order");
-			System.out.println("1: ascending order");
+			System.out.println("#0: ascending order");
 			System.out.print("Please choose: ");
 			type = scan.nextLine();
-			writeFile(readFile(path, type));
+			writeFile(readFile(path, type), file.getParent());
+		} else {
+			System.out.println("The path file is invalid");
 		}
-		
-		
+
 	}
-	
-	public void writeFile(String content) {
-		File file = new File("/Navata/text/output.txt");
+
+	public void writeFile(String content, String path) {
+		File file = new File(path + "output.txt");
 
 		try (FileOutputStream fop = new FileOutputStream(file)) {
 
@@ -72,10 +73,9 @@ public class Main {
 	}
 
 	public String readFile(String path, String type) {
-//		String path = "/Navata/text/test.txt";
 		File file = new File(path);
 		StringBuilder output = new StringBuilder();
-		
+
 		try {
 			FileInputStream inputFile = new FileInputStream(file);
 			BufferedReader buffer = new BufferedReader(new InputStreamReader(inputFile));
@@ -83,7 +83,7 @@ public class Main {
 			while ((line = buffer.readLine()) != null) {
 				line = line.trim();
 				if (line != null && !line.isEmpty()) {
-					String sortNumber = sortNumber(line, type);
+					String sortNumber = sort(line, type);
 					output.append(sortNumber + "\n");
 				}
 			}
@@ -117,7 +117,7 @@ public class Main {
 		return index;
 	}
 
-	public String sortNumber(String input, String type) {
+	public String sort(String input, String type) {
 		List<String> valid = new ArrayList<String>();
 		List<String> mis = new ArrayList<String>();
 
@@ -129,12 +129,12 @@ public class Main {
 			} else {
 				mis.add("Invalid:" + element);
 			}
-		
+
 		}
-		
+
 		valid.addAll(mis);
 		System.out.println(valid.toString());
-		
+
 		return valid.toString();
 	}
 
@@ -170,7 +170,7 @@ public class Main {
 			}
 
 			for (; i < number.length; i++) {
-				String value = NUMBER_HASHMAP2.get(number[i]);
+				String value = NUMBER_HASHMAP.get(number[i]);
 				if (value != null) {
 					sum += Integer.parseInt(dau + value);
 				} else {
@@ -213,68 +213,36 @@ public class Main {
 	}
 
 	private void defineNumberHashMap() {
-		NUMBER_HASHMAP.put(0, "zero");
-		NUMBER_HASHMAP.put(1, "one");
-		NUMBER_HASHMAP.put(2, "two");
-		NUMBER_HASHMAP.put(3, "three");
-		NUMBER_HASHMAP.put(4, "four");
-		NUMBER_HASHMAP.put(5, "five");
-		NUMBER_HASHMAP.put(6, "six");
-		NUMBER_HASHMAP.put(7, "seven");
-		NUMBER_HASHMAP.put(8, "eight");
-		NUMBER_HASHMAP.put(9, "nine");
-		NUMBER_HASHMAP.put(10, "ten");
-		NUMBER_HASHMAP.put(11, "eleven");
-		NUMBER_HASHMAP.put(12, "twelve");
-		NUMBER_HASHMAP.put(13, "thirteen");
-		NUMBER_HASHMAP.put(14, "fourteen");
-		NUMBER_HASHMAP.put(15, "fifteen");
-		NUMBER_HASHMAP.put(16, "sixteen");
-		NUMBER_HASHMAP.put(17, "seventeen");
-		NUMBER_HASHMAP.put(18, "eight");
-		NUMBER_HASHMAP.put(19, "nineten");
-		NUMBER_HASHMAP.put(20, "twenty");
-		NUMBER_HASHMAP.put(30, "thirty");
-		NUMBER_HASHMAP.put(40, "fourty");
-		NUMBER_HASHMAP.put(50, "fifty");
-		NUMBER_HASHMAP.put(60, "sixty");
-		NUMBER_HASHMAP.put(70, "seventy");
-		NUMBER_HASHMAP.put(80, "eighty");
-		NUMBER_HASHMAP.put(90, "ninety");
-		NUMBER_HASHMAP.put(100, "hundred");
-	}
-
-	private void defineNumberHashMap2() {
 		// NUMBER_HASHMAP2.put("negative", "-");
 		// NUMBER_HASHMAP2.put("positive", "+");
-		NUMBER_HASHMAP2.put("zero", "0");
-		NUMBER_HASHMAP2.put("one", "1");
-		NUMBER_HASHMAP2.put("two", "2");
-		NUMBER_HASHMAP2.put("three", "3");
-		NUMBER_HASHMAP2.put("four", "4");
-		NUMBER_HASHMAP2.put("five", "5");
-		NUMBER_HASHMAP2.put("six", "6");
-		NUMBER_HASHMAP2.put("seven", "7");
-		NUMBER_HASHMAP2.put("eight", "8");
-		NUMBER_HASHMAP2.put("nine", "9");
-		NUMBER_HASHMAP2.put("ten", "10");
-		NUMBER_HASHMAP2.put("eleven", "11");
-		NUMBER_HASHMAP2.put("twelve", "12");
-		NUMBER_HASHMAP2.put("thirteen", "13");
-		NUMBER_HASHMAP2.put("fourteen", "14");
-		NUMBER_HASHMAP2.put("fifteen", "15");
-		NUMBER_HASHMAP2.put("sixteen", "16");
-		NUMBER_HASHMAP2.put("seventeen", "17");
-		NUMBER_HASHMAP2.put("eighteen", "18");
-		NUMBER_HASHMAP2.put("nineten", "19");
-		NUMBER_HASHMAP2.put("twenty", "20");
-		NUMBER_HASHMAP2.put("thirty", "30");
-		NUMBER_HASHMAP2.put("fourty", "40");
-		NUMBER_HASHMAP2.put("fifty", "50");
-		NUMBER_HASHMAP2.put("sixty", "60");
-		NUMBER_HASHMAP2.put("seventy", "70");
-		NUMBER_HASHMAP2.put("eighty", "80");
-		NUMBER_HASHMAP2.put("ninety", "90");
-		NUMBER_HASHMAP2.put("hundred", "100");
+		NUMBER_HASHMAP.put("zero", "0");
+		NUMBER_HASHMAP.put("one", "1");
+		NUMBER_HASHMAP.put("two", "2");
+		NUMBER_HASHMAP.put("three", "3");
+		NUMBER_HASHMAP.put("four", "4");
+		NUMBER_HASHMAP.put("five", "5");
+		NUMBER_HASHMAP.put("six", "6");
+		NUMBER_HASHMAP.put("seven", "7");
+		NUMBER_HASHMAP.put("eight", "8");
+		NUMBER_HASHMAP.put("nine", "9");
+		NUMBER_HASHMAP.put("ten", "10");
+		NUMBER_HASHMAP.put("eleven", "11");
+		NUMBER_HASHMAP.put("twelve", "12");
+		NUMBER_HASHMAP.put("thirteen", "13");
+		NUMBER_HASHMAP.put("fourteen", "14");
+		NUMBER_HASHMAP.put("fifteen", "15");
+		NUMBER_HASHMAP.put("sixteen", "16");
+		NUMBER_HASHMAP.put("seventeen", "17");
+		NUMBER_HASHMAP.put("eighteen", "18");
+		NUMBER_HASHMAP.put("nineten", "19");
+		NUMBER_HASHMAP.put("twenty", "20");
+		NUMBER_HASHMAP.put("thirty", "30");
+		NUMBER_HASHMAP.put("forty", "40");
+		NUMBER_HASHMAP.put("fifty", "50");
+		NUMBER_HASHMAP.put("sixty", "60");
+		NUMBER_HASHMAP.put("seventy", "70");
+		NUMBER_HASHMAP.put("eighty", "80");
+		NUMBER_HASHMAP.put("ninety", "90");
+		NUMBER_HASHMAP.put("hundred", "100");
 	}
 }
